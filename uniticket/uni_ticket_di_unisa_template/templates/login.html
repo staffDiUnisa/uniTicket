@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load uni_ticket_bootstrap_italia_tags %}
+
+{% block content_title %}
+    <div class="py-md-5 bd-content clearfix">
+    <!-- <div class="col-lg-6 p-5 offset-md-3 py-md-5 align-self-center bd-content clearfix"> -->
+        <div class="text text-justify text-black text-break">
+            <p>DINF Support è una piattaforma dedicata che consente a docenti e studenti di inviare richieste di assistenza (ticket) all’Ufficio Tecnico del Dipartimento di Informatica.</p>
+            <p>Attraverso il sistema è possibile monitorare lo stato delle segnalazioni e ricevere aggiornamenti in tempo reale.</p>
+            <p>Se hai bisogno di supporto per uno dei segurnti problemi:
+                {% list_ticket_categories%}
+            effettua l'accesso apri un ticket
+            </p>
+        </div>
+
+        {% block right_button %}
+        {% endblock %}
+    </div>
+{% endblock content_title %}
+
+{% block container_inner %}
+<div class="container col-lg-6 p-5 offset-md-3 align-self-center card">
+{% if request.user.is_authenticated %}
+    <!-- <meta http-equiv="REFRESH" content="0;url={% url 'helpdesk:home' %}"> -->
+    <meta http-equiv="REFRESH" content="0;url=/dashbord">
+{% else %}
+    {% include 'messages.html' %}
+
+    <!-- <h4 class="float-left"> -->
+    <div class="card-title">
+        <h4 class="text-uppercase">
+            {% trans "Effettua l'accesso" %}
+        </h4>
+    </div>
+    <div class="card-subtitle text-muted">
+        <h6 class="fst-italic fw-lighter">Utilizza l'account dei laboratori didattici (xxx00@csedu.unisa.it)</h6>
+    </div>
+    <div class="card-body">
+        <div class="login-panel panel panel-default">
+            <div class="panel-body">
+                <form role="form" method='post' action='./'>
+                {% if form.errors %}
+                <div class="alert alert-danger">{% trans "Your username and password didn't match. Please try again." %}</div>
+                {% endif %}
+                    <fieldset>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Username: xxx00@csedu.unisa.it" name="username" type="text" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                            </label>
+                            <input name="remember" type="checkbox" value="Remember Me">{% trans 'Ricordami' %}
+                        </div>
+                        <!-- <div class="text"><a href="/tickets/new/3/3">Password dimenticata</a></div> -->
+                        <input class="btn btn-primary btn-block" type='submit' value='{% trans "Login" %}' />
+                        <div class="btn-group btn-block">
+                            <a href="/tickets/new/3/6" class="btn btn-sm btn-outline-dark" aria-current="page">Password dimenticata</a>
+                            <a href="/tickets/new/3/5" class="btn btn-sm btn-outline-dark">Credenziali dimenticate</a>
+                            <a href="/tickets/new/3/3" class="btn btn-sm btn-outline-dark">Richiesta nuovo account</a>
+                        </div>
+                        <input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}../{% endif %}" />
+                    </fieldset>
+                {% csrf_token %}</form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+</div>
+{% endblock %}
